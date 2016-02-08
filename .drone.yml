@@ -1,0 +1,16 @@
+build:
+  image: armhfbuild/buildpack-deps:jessie-scm
+  commands:
+    - git clone --single-branch https://github.com/nilroy/docker-letsencrypt-nginx-proxy-companion/ upstream
+    - cd upstream
+    - sed -i 's/FROM alpine/FROM armhfbuild\/alpine/' Dockerfile
+    - sed -i 's/amd64/armhf/' Dockerfile
+
+publish:
+  docker:
+    context: upstream
+    file: upstream/Dockerfile
+    username: $$DOCKER_USER
+    email: $$DOCKER_EMAIL
+    password: $$DOCKER_PASSWORD
+    repo: armhfbuild/letsencrypt-nginx-proxy-companion
